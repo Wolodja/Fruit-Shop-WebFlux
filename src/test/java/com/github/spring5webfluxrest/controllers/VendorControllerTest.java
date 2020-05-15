@@ -7,9 +7,12 @@ import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.reactivestreams.Publisher;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import static org.mockito.ArgumentMatchers.any;
 
 class VendorControllerTest {
 
@@ -22,12 +25,16 @@ class VendorControllerTest {
 
     WebTestClient webTestClient;
 
+    Vendor vendor;
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
         vendorController = new VendorController(vendorRepository);
 
         webTestClient = WebTestClient.bindToController(vendorController).build();
+
+        vendor = Vendor.builder().build();
     }
 
     @Test
@@ -54,5 +61,20 @@ class VendorControllerTest {
                 .exchange()
                 .expectBody(Vendor.class)
                 .isEqualTo(vendor);
+    }
+
+    @Test
+    public void testCreateCateogry() {
+        BDDMockito.given(vendorRepository.saveAll(any(Publisher.class)))
+                .willReturn(Flux.just(vendor));
+
+        Mono<Vendor> vendorToSaveMono = Mono.just(vendor);
+
+        webTestClient.post()
+                .uri("/api/v1/vendors")
+                .body(vendorToSaveMono, Vendor.class)
+                .exchange()
+                .expectStatus()
+                .isCreated();
     }
 }
