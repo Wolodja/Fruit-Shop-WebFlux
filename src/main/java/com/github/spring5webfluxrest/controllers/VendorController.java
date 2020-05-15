@@ -18,36 +18,37 @@ import reactor.core.publisher.Mono;
 @RestController
 public class VendorController {
 
+    public static final String VENDOR_API_URI = "/api/v1/vendors";
     private final VendorRepository vendorRepository;
 
     public VendorController(VendorRepository vendorRepository) {
         this.vendorRepository = vendorRepository;
     }
 
-    @GetMapping("/api/v1/vendors")
-    Flux<Vendor> list() {
+    @GetMapping(VENDOR_API_URI)
+    public Flux<Vendor> list() {
         return vendorRepository.findAll();
     }
 
-    @GetMapping("/api/v1/vendors/{id}")
-    Mono<Vendor> getById(@PathVariable String id) {
+    @GetMapping(VENDOR_API_URI + "/{id}")
+    public Mono<Vendor> getById(@PathVariable String id) {
         return vendorRepository.findById(id);
     }
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/api/v1/vendors")
-    Mono<Void> create(@RequestBody Publisher<Vendor> vendorPublisher){
+    @PostMapping(VENDOR_API_URI)
+    public Mono<Void> create(@RequestBody Publisher<Vendor> vendorPublisher){
         return vendorRepository.saveAll(vendorPublisher).then();
     }
 
-    @PutMapping("/api/v1/vendors/{id}")
-    Mono<Vendor> update(@PathVariable String id, @RequestBody Vendor vendor){
+    @PutMapping(VENDOR_API_URI + "/{id}")
+    public Mono<Vendor> update(@PathVariable String id, @RequestBody Vendor vendor){
         vendor.setId(id);
         return vendorRepository.save(vendor);
     }
 
-    @PatchMapping("api/v1/vendors/{id}")
-    Mono<Vendor> patch(@PathVariable String id, @RequestBody Vendor vendor){
+    @PatchMapping(VENDOR_API_URI + "/{id}")
+    public Mono<Vendor> patch(@PathVariable String id, @RequestBody Vendor vendor){
 
         Vendor foundVendor = vendorRepository.findById(id).block();
 

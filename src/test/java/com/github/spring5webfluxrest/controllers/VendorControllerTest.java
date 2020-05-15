@@ -20,7 +20,8 @@ import static org.mockito.Mockito.verify;
 class VendorControllerTest {
 
     private static final String ID = "Id";
-    private static final String VENDOR_API_URI = "/api/v1/vendors";
+    private static final String VENDOR_API_URI = VendorController.VENDOR_API_URI;
+
     @Mock
     VendorRepository vendorRepository;
 
@@ -74,7 +75,7 @@ class VendorControllerTest {
         Mono<Vendor> vendorToSaveMono = Mono.just(vendor);
 
         webTestClient.post()
-                .uri("/api/v1/vendors")
+                .uri(VENDOR_API_URI)
                 .body(vendorToSaveMono, Vendor.class)
                 .exchange()
                 .expectStatus()
@@ -89,7 +90,7 @@ class VendorControllerTest {
         Mono<Vendor> vendorToUpdateMono = Mono.just(vendor);
 
         webTestClient.put()
-                .uri("/api/v1/vendors/someId")
+                .uri(VENDOR_API_URI + "/" + ID)
                 .body(vendorToUpdateMono, Vendor.class)
                 .exchange()
                 .expectStatus()
@@ -109,7 +110,7 @@ class VendorControllerTest {
         Mono<Vendor> vendorMonoToUpdate = Mono.just(Vendor.builder().firstName("Jim").build());
 
         webTestClient.patch()
-                .uri("/api/v1/vendors/someid")
+                .uri(VENDOR_API_URI + "/" + ID)
                 .body(vendorMonoToUpdate, Vendor.class)
                 .exchange()
                 .expectStatus()
@@ -130,7 +131,7 @@ class VendorControllerTest {
         Mono<Vendor> vendorMonoToUpdate = Mono.just(Vendor.builder().firstName("Jimmy").build());
 
         webTestClient.patch()
-                .uri("/api/v1/vendors/someid")
+                .uri(VENDOR_API_URI + "/"+ ID)
                 .body(vendorMonoToUpdate, Vendor.class)
                 .exchange()
                 .expectStatus()
