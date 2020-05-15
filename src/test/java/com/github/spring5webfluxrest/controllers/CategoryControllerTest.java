@@ -20,7 +20,7 @@ import static org.mockito.Mockito.verify;
 class CategoryControllerTest {
 
     private static final String ID = "Id";
-    private static final String API_URI = "/api/v1/categories";
+    private static final String API_URI = CategoryController.CATEGORY_API_URI;
     WebTestClient webTestClient;
 
     @Mock
@@ -70,7 +70,7 @@ class CategoryControllerTest {
         Mono<Category> catToSaveMono = Mono.just(Category.builder().description("Some Cat").build());
 
         webTestClient.post()
-                .uri("/api/v1/categories")
+                .uri(API_URI)
                 .body(catToSaveMono, Category.class)
                 .exchange()
                 .expectStatus()
@@ -85,7 +85,7 @@ class CategoryControllerTest {
         Mono<Category> catToUpdateMono = Mono.just(Category.builder().build());
 
         webTestClient.put()
-                .uri("/api/v1/categories/someId")
+                .uri(API_URI + "/someId")
                 .body(catToUpdateMono, Category.class)
                 .exchange()
                 .expectStatus()
@@ -104,7 +104,7 @@ class CategoryControllerTest {
         Mono<Category> catToUpdateMono = Mono.just(Category.builder().description("New Description").build());
 
         webTestClient.patch()
-                .uri("/api/v1/categories/asdfasdf")
+                .uri(API_URI + "/asdfasdf")
                 .body(catToUpdateMono, Category.class)
                 .exchange()
                 .expectStatus()
@@ -124,7 +124,7 @@ class CategoryControllerTest {
         Mono<Category> catToUpdateMono = Mono.just(Category.builder().build());
 
         webTestClient.patch()
-                .uri("/api/v1/categories/asdfasdf")
+                .uri(API_URI + "/asdfasdf")
                 .body(catToUpdateMono, Category.class)
                 .exchange()
                 .expectStatus()
